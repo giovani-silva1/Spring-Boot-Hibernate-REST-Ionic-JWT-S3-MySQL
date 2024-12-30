@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.giovanidev.loja_ionic_be.domain.Categoria;
 import com.giovanidev.loja_ionic_be.repository.CategoriaRepository;
+import com.giovanidev.loja_ionic_be.service.exception.ObjectNotFoundException;
 
 @Service
 public class CategoriaService {
@@ -18,7 +19,8 @@ public class CategoriaService {
 	
 	public Categoria buscar(Integer id) {
 		Optional<Categoria>categoriaEncontrada = categoriaRepository.findById(id);
-		return categoriaEncontrada.orElseThrow(null);
+		return categoriaEncontrada.orElseThrow(() -> new ObjectNotFoundException( 
+				"Objeto não encontrado! Id: " + id + ", Tipo: " + Categoria.class.getName())); 
 	}
 	
 	
