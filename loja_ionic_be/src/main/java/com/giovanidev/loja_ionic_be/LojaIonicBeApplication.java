@@ -2,6 +2,7 @@ package com.giovanidev.loja_ionic_be;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -10,10 +11,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.giovanidev.loja_ionic_be.domain.Categoria;
 import com.giovanidev.loja_ionic_be.domain.Cidade;
+import com.giovanidev.loja_ionic_be.domain.Cliente;
+import com.giovanidev.loja_ionic_be.domain.Endereco;
 import com.giovanidev.loja_ionic_be.domain.Estado;
 import com.giovanidev.loja_ionic_be.domain.Produto;
+import com.giovanidev.loja_ionic_be.domain.enums.TipoCliente;
 import com.giovanidev.loja_ionic_be.repository.CategoriaRepository;
 import com.giovanidev.loja_ionic_be.repository.CidadeRepository;
+import com.giovanidev.loja_ionic_be.repository.ClienteRepository;
+import com.giovanidev.loja_ionic_be.repository.EnderecoRepository;
 import com.giovanidev.loja_ionic_be.repository.EstadoRepository;
 import com.giovanidev.loja_ionic_be.repository.ProdutoRepository;
 
@@ -32,6 +38,12 @@ public class LojaIonicBeApplication implements CommandLineRunner {
 	
 	@Autowired
 	private EstadoRepository estadoRepository;
+	
+	@Autowired
+	private ClienteRepository clienteRepository;
+	
+	@Autowired
+	private EnderecoRepository enderecoRepository;
 	
 	
 	public static void main(String[] args) {
@@ -69,6 +81,18 @@ public class LojaIonicBeApplication implements CommandLineRunner {
 		est2.setCidades(Arrays.asList(c2,c3));
 		
 		estadoRepository.saveAll(Arrays.asList(est1,est2));
+		
+		Cliente cli1 = new Cliente(null,"Maria Silva","Maria@gmail.com","36378912377",TipoCliente.PESSOAFISICA);
+		clienteRepository.save(cli1);
+		Endereco e1 = new Endereco(null,"Rua Flores","300","Apto203","Jardim","38220834",cli1, c1);
+		Endereco e2 = new Endereco(null,"Avenida Matos","105","Sala 800","Centro","38777012",cli1, c2);
+		
+		enderecoRepository.saveAll(Arrays.asList(e1,e2));
+		cli1.setEnderecos(Arrays.asList(e1,e2));
+		
+		cli1.getTelefones().addAll(Arrays.asList("27363323","93838393"));
+		clienteRepository.save(cli1);
+		
 	}
 
 }
