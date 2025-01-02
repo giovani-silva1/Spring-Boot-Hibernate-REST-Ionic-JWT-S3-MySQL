@@ -1,8 +1,6 @@
 package com.giovanidev.loja_ionic_be;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

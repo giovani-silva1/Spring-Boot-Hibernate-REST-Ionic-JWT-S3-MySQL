@@ -7,20 +7,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.giovanidev.loja_ionic_be.domain.Categoria;
-import com.giovanidev.loja_ionic_be.service.CategoriaService;
+import com.giovanidev.loja_ionic_be.domain.Cliente;
+import com.giovanidev.loja_ionic_be.service.ClienteService;
 
 @RestController
-@RequestMapping(value = "/categorias")
-public class CategoriaResource {
+@RequestMapping(value = "/clientes")
+public class ClienteResource {
 	
-	@Autowired
-	private CategoriaService categoriaService;
 
-	@GetMapping(value = "/{id}")
-	public ResponseEntity<Categoria> buscarPorId (@PathVariable Integer id)  {
-		return ResponseEntity.ok(categoriaService.buscar(id));
 		
-	}
-	
+		@Autowired
+		private ClienteService clienteService;
+
+		@GetMapping(value = "/{id}")
+		public ResponseEntity<Cliente> buscarPorId (@PathVariable Integer id)  {
+			return ResponseEntity.ok(clienteService.buscar(id));
+			
+		}
+
 }
