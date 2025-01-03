@@ -1,5 +1,7 @@
 package com.giovanidev.loja_ionic_be;
 
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +14,20 @@ import com.giovanidev.loja_ionic_be.domain.Cidade;
 import com.giovanidev.loja_ionic_be.domain.Cliente;
 import com.giovanidev.loja_ionic_be.domain.Endereco;
 import com.giovanidev.loja_ionic_be.domain.Estado;
+import com.giovanidev.loja_ionic_be.domain.Pagamento;
+import com.giovanidev.loja_ionic_be.domain.PagamentoComBoleto;
+import com.giovanidev.loja_ionic_be.domain.PagamentoComCartao;
+import com.giovanidev.loja_ionic_be.domain.Pedido;
 import com.giovanidev.loja_ionic_be.domain.Produto;
+import com.giovanidev.loja_ionic_be.domain.enums.EstadoPagamento;
 import com.giovanidev.loja_ionic_be.domain.enums.TipoCliente;
 import com.giovanidev.loja_ionic_be.repository.CategoriaRepository;
 import com.giovanidev.loja_ionic_be.repository.CidadeRepository;
 import com.giovanidev.loja_ionic_be.repository.ClienteRepository;
 import com.giovanidev.loja_ionic_be.repository.EnderecoRepository;
 import com.giovanidev.loja_ionic_be.repository.EstadoRepository;
+import com.giovanidev.loja_ionic_be.repository.PagamentoRepository;
+import com.giovanidev.loja_ionic_be.repository.PedidoRepository;
 import com.giovanidev.loja_ionic_be.repository.ProdutoRepository;
 
 @SpringBootApplication
@@ -43,6 +52,12 @@ public class LojaIonicBeApplication implements CommandLineRunner {
 	@Autowired
 	private EnderecoRepository enderecoRepository;
 	
+	@Autowired
+	private PedidoRepository pedidoRepository;
+	
+	@Autowired
+	private PagamentoRepository pagamentoRepository;
+	
 	
 	public static void main(String[] args) {
 		SpringApplication.run(LojaIonicBeApplication.class, args);
@@ -51,6 +66,7 @@ public class LojaIonicBeApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		Categoria cat1 = new Categoria(null, "INFORMATICA");
 		Categoria cat2 = new Categoria(null, "ESCRITÓRIO");
 		categoriaRepository.saveAll(Arrays.asList(cat1,cat2));
@@ -91,6 +107,24 @@ public class LojaIonicBeApplication implements CommandLineRunner {
 		cli1.getTelefones().addAll(Arrays.asList("27363323","93838393"));
 		clienteRepository.save(cli1);
 		
+		
+		Pedido ped1 = new Pedido(null,format.parse("30/09/2017 10:32"), cli1, e1);
+		Pedido ped2 = new Pedido(null,format.parse("10/10/2017 19:35"), cli1, e2);
+		
+		
+		Pagamento pagto1 = new PagamentoComCartao(null, EstadoPagamento.QUITADO, ped1,6);
+		Pagamento pagto2 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, ped2,format.parse("20/10/2017 00:00"),null);
+		pagamentoRepository.saveAll(Arrays.asList(pagto1,pagto2));
+		ped1.setPagamento(pagto1);
+		ped2.setPagamento(pagto2);
+		
+		
+		
+		pedidoRepository.saveAllAndFlush(Arrays.asList(ped1,ped2));
+		pagamentoRepository.saveAll(Arrays.asList(pagto1,pagto2));
+		cli1.getPedidos().addAll(Arrays.asList(ped1,ped2));
+		
+		clienteRepository.save(cli1);
 	}
 
 }

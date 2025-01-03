@@ -1,6 +1,7 @@
 package com.giovanidev.loja_ionic_be.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -38,6 +39,9 @@ public class Cliente implements Serializable {
 	@ElementCollection
 	@CollectionTable(name = "Telefone")
 	private Set<String> telefones = new HashSet<>();
+	
+	@OneToMany(mappedBy = "cliente")
+	private List<Pedido> pedidos = new ArrayList<>();
 	
 	
 	
@@ -138,6 +142,20 @@ public class Cliente implements Serializable {
 
 	public void setTelefones(Set<String> telefones) {
 		this.telefones = telefones;
+	}
+	
+	
+
+
+
+	public List<Pedido> getPedidos() {
+		return pedidos;
+	}
+
+
+
+	public void setPedidos(List<Pedido> pedidos) {
+		this.pedidos = pedidos;
 	}
 
 
