@@ -17,7 +17,7 @@ public class CategoriaService {
 	private CategoriaRepository categoriaRepository;
 
 	
-	public Categoria buscar(Integer id) {
+	public Categoria find(Integer id) {
 		Optional<Categoria>categoriaEncontrada = categoriaRepository.findById(id);
 		return categoriaEncontrada.orElseThrow(() -> new ObjectNotFoundException( 
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Categoria.class.getName())); 
@@ -28,6 +28,17 @@ public class CategoriaService {
 		categoria.setId(null);
 		return categoriaRepository.save(categoria);
 	}
+
+
+	public Categoria update(Categoria categoria) {
+		Optional<Categoria>categoriaEncontrada = categoriaRepository.findById(categoria.getId());
+		categoriaEncontrada.orElseThrow(() -> new ObjectNotFoundException( 
+				"Objeto não encontrado! Id: " + categoria.getId() + ", Tipo: " + Categoria.class.getName())); 
+		
+		return categoriaRepository.save(categoria);
+	}
+	
+	
 	
 	
 }
