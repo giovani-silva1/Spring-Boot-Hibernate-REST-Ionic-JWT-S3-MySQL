@@ -14,6 +14,7 @@ import com.giovanidev.loja_ionic_be.domain.Cidade;
 import com.giovanidev.loja_ionic_be.domain.Cliente;
 import com.giovanidev.loja_ionic_be.domain.Endereco;
 import com.giovanidev.loja_ionic_be.domain.Estado;
+import com.giovanidev.loja_ionic_be.domain.ItemPedido;
 import com.giovanidev.loja_ionic_be.domain.Pagamento;
 import com.giovanidev.loja_ionic_be.domain.PagamentoComBoleto;
 import com.giovanidev.loja_ionic_be.domain.PagamentoComCartao;
@@ -26,6 +27,7 @@ import com.giovanidev.loja_ionic_be.repository.CidadeRepository;
 import com.giovanidev.loja_ionic_be.repository.ClienteRepository;
 import com.giovanidev.loja_ionic_be.repository.EnderecoRepository;
 import com.giovanidev.loja_ionic_be.repository.EstadoRepository;
+import com.giovanidev.loja_ionic_be.repository.ItemPedidoRepository;
 import com.giovanidev.loja_ionic_be.repository.PagamentoRepository;
 import com.giovanidev.loja_ionic_be.repository.PedidoRepository;
 import com.giovanidev.loja_ionic_be.repository.ProdutoRepository;
@@ -57,6 +59,9 @@ public class LojaIonicBeApplication implements CommandLineRunner {
 	
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
+	
+	@Autowired
+	private ItemPedidoRepository itemPedidoRepository;
 	
 	
 	public static void main(String[] args) {
@@ -125,6 +130,20 @@ public class LojaIonicBeApplication implements CommandLineRunner {
 		cli1.getPedidos().addAll(Arrays.asList(ped1,ped2));
 		
 		clienteRepository.save(cli1);
+		
+		ItemPedido ip1 = new ItemPedido(ped1, p1, 0.00, 1, 2000.00);
+		ItemPedido ip2 = new ItemPedido(ped1, p3, 0.00, 2, 80.00);
+		ItemPedido ip3 = new ItemPedido(ped2, p2, 100.00, 1, 800.00);
+		
+		ped1.getItens().addAll(Arrays.asList(ip1,ip2));
+		ped2.getItens().addAll(Arrays.asList(ip3));
+		p1.getItens().add(ip1);
+		p2.getItens().add(ip3);
+		p3.getItens().add(ip2);
+		
+		itemPedidoRepository.saveAll(Arrays.asList(ip1,ip2,ip3));
+		pedidoRepository.saveAll(Arrays.asList(ped1,ped2));
+		produtoRepository.saveAll(Arrays.asList(p1,p2,p3));
 	}
 
 }

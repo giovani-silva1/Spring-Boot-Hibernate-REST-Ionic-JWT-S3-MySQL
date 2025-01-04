@@ -2,8 +2,10 @@ package com.giovanidev.loja_ionic_be.domain;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -14,6 +16,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Produto implements Serializable {
@@ -24,20 +27,18 @@ public class Produto implements Serializable {
 	private Integer id;
 	private String nome;
 	private double preco;
-	
-	
+
 	@JsonBackReference
 	@ManyToMany
-	@JoinTable(name = "PRODUTO_CATEGORIA",
-	joinColumns = @JoinColumn(name="produto_id"),
-	inverseJoinColumns = @JoinColumn(name="categoria_id"))
+	@JoinTable(name = "PRODUTO_CATEGORIA", joinColumns = @JoinColumn(name = "produto_id"), inverseJoinColumns = @JoinColumn(name = "categoria_id"))
 	private List<Categoria> categorias = new ArrayList<>();
-	
-	
-	public Produto() {
-		
-	}
 
+	@OneToMany(mappedBy = "id.produto")
+	private Set<ItemPedido> itens = new HashSet<>();
+
+	public Produto() {
+
+	}
 
 	public Produto(Integer id, String nome, double preco) {
 		super();
@@ -46,52 +47,58 @@ public class Produto implements Serializable {
 		this.preco = preco;
 	}
 
+	public List<Pedido> getPedidos() {
+		List<Pedido> lista = new ArrayList<>();
+		for (ItemPedido itemPedido : itens) {
+			lista.add(itemPedido.getPedido());
+		}
+		return lista;
+	}
 
 	public Integer getId() {
 		return id;
 	}
 
-
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
 
 	public String getNome() {
 		return nome;
 	}
 
-
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-
 
 	public double getPreco() {
 		return preco;
 	}
 
-
 	public void setPreco(double preco) {
 		this.preco = preco;
 	}
-
 
 	public List<Categoria> getCategorias() {
 		return categorias;
 	}
 
-
 	public void setCategorias(List<Categoria> categorias) {
 		this.categorias = categorias;
 	}
 
+	public Set<ItemPedido> getItens() {
+		return itens;
+	}
+
+	public void setItens(Set<ItemPedido> itens) {
+		this.itens = itens;
+	}
 
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -104,12 +111,5 @@ public class Produto implements Serializable {
 		Produto other = (Produto) obj;
 		return Objects.equals(id, other.id);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
+
 }
