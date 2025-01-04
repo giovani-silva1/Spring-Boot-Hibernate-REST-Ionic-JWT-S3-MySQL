@@ -81,6 +81,7 @@ public class Produto implements Serializable {
 		this.preco = preco;
 	}
 
+	
 	public List<Categoria> getCategorias() {
 		return categorias;
 	}
