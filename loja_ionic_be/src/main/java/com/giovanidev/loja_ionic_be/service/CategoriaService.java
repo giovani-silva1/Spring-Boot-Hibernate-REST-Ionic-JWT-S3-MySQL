@@ -3,6 +3,7 @@ package com.giovanidev.loja_ionic_be.service;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.giovanidev.loja_ionic_be.domain.Categoria;
@@ -37,6 +38,20 @@ public class CategoriaService {
 		
 		return categoriaRepository.save(categoria);
 	}
+
+
+	public void delete(Integer id) {
+		find(id);
+		try {
+			categoriaRepository.deleteById(id);
+		}catch (DataIntegrityViolationException e) {
+			throw new DataIntegrityViolationException("Não é possivel deletar uma categoria com produtos associados");
+		}
+		
+	}
+	
+	
+	
 	
 	
 	
