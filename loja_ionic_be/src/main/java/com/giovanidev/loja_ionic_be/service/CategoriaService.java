@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.giovanidev.loja_ionic_be.domain.Categoria;
+import com.giovanidev.loja_ionic_be.domain.dto.CategoriaDTO;
 import com.giovanidev.loja_ionic_be.repository.CategoriaRepository;
 import com.giovanidev.loja_ionic_be.service.exception.ObjectNotFoundException;
 
@@ -26,8 +27,8 @@ public class CategoriaService {
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Categoria.class.getName()));
 	}
 
-	public Categoria insert(Categoria categoria) {
-		categoria.setId(null);
+	public Categoria insert(CategoriaDTO categoriaDto) {
+		Categoria categoria = fromDto(categoriaDto);
 		return categoriaRepository.save(categoria);
 	}
 
@@ -56,6 +57,11 @@ public class CategoriaService {
 	public Page<Categoria> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
 		return categoriaRepository.findAll(pageRequest);
+	}
+	
+	
+	public Categoria fromDto(CategoriaDTO categoriaDto) {
+		return new Categoria(categoriaDto.getId(), categoriaDto.getNome());
 	}
 
 }

@@ -22,6 +22,8 @@ import com.giovanidev.loja_ionic_be.domain.Categoria;
 import com.giovanidev.loja_ionic_be.domain.dto.CategoriaDTO;
 import com.giovanidev.loja_ionic_be.service.CategoriaService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping(value = "/categorias")
 public class CategoriaResource {
@@ -56,8 +58,8 @@ public class CategoriaResource {
 	}
 
 	@PostMapping
-	public ResponseEntity<Void> insert(@RequestBody Categoria categoria) {
-		categoria = categoriaService.insert(categoria);
+	public ResponseEntity<Void> insert(@Valid @RequestBody CategoriaDTO categoriaDto) {
+		Categoria categoria = categoriaService.insert(categoriaDto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(categoria.getId())
 				.toUri();
 		return ResponseEntity.created(uri).build();
@@ -76,4 +78,7 @@ public class CategoriaResource {
 		categoriaService.delete(id);
 		return ResponseEntity.noContent().build();
 	}
+	
+	
+	
 }
