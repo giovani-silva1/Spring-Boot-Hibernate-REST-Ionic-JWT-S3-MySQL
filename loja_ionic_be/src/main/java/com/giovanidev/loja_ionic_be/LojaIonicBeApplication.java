@@ -1,7 +1,6 @@
 package com.giovanidev.loja_ionic_be;
 
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +73,18 @@ public class LojaIonicBeApplication implements CommandLineRunner {
 		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		Categoria cat1 = new Categoria(null, "INFORMATICA");
 		Categoria cat2 = new Categoria(null, "ESCRITÓRIO");
-		categoriaRepository.saveAll(Arrays.asList(cat1,cat2));
+		Categoria cat3 = new Categoria(null, "JARDINAGEM");
+		Categoria cat4 = new Categoria(null, "CAMA MESA E BANHO");
+		Categoria cat5 = new Categoria(null, "UTENSILIOS");
+		Categoria cat6 = new Categoria(null, "BEBIDAS");
+		Categoria cat7 = new Categoria(null, "ELETRONICA");
+		Categoria cat8 = new Categoria(null, "CHINES");
+		Categoria cat9 = new Categoria(null, "BARBECUE");
+		Categoria cat10 = new Categoria(null, "PERFUMARIA");
+		Categoria cat11 = new Categoria(null, "ESTOFADOS");
+		Categoria cat12 = new Categoria(null, "VESTIMENTA");
+	
+		categoriaRepository.saveAll(Arrays.asList(cat1,cat2,cat3,cat4,cat5,cat6,cat7,cat8,cat9,cat10,cat11,cat12));
 		Produto p1 = new Produto(null, "Computador",2000.00);
 		Produto p2 = new Produto(null, "Impressora",800.00);
 		Produto p3 = new Produto(null, "Mouse",2000.00);
