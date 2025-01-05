@@ -1,6 +1,8 @@
 package com.giovanidev.loja_ionic_be.resources;
 
 import java.net.URI;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.giovanidev.loja_ionic_be.domain.Categoria;
+import com.giovanidev.loja_ionic_be.domain.dto.CategoriaDTO;
 import com.giovanidev.loja_ionic_be.service.CategoriaService;
 
 @RestController
@@ -27,6 +30,14 @@ public class CategoriaResource {
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Categoria> buscarPorId(@PathVariable Integer id) {
 		return ResponseEntity.ok(categoriaService.find(id));
+
+	}
+	
+	@GetMapping()
+	public ResponseEntity<List<CategoriaDTO>> listAll() {
+		List<Categoria> categoriasEncontradas = categoriaService.findAll();
+		List<CategoriaDTO> categoriaDto = categoriasEncontradas.stream().map(obj -> new CategoriaDTO(obj)).collect(Collectors.toList());
+		return ResponseEntity.ok().body(categoriaDto);
 
 	}
 
