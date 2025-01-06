@@ -2,6 +2,9 @@ package com.giovanidev.loja_ionic_be.domain.dto;
 
 import java.io.Serializable;
 
+import com.giovanidev.loja_ionic_be.service.validation.ClienteInsert;
+
+@ClienteInsert
 public class ClienteNewDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
