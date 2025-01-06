@@ -1,5 +1,6 @@
 package com.giovanidev.loja_ionic_be.service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,17 +12,31 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.giovanidev.loja_ionic_be.domain.Categoria;
+import com.giovanidev.loja_ionic_be.domain.Cidade;
 import com.giovanidev.loja_ionic_be.domain.Cliente;
+import com.giovanidev.loja_ionic_be.domain.Endereco;
 import com.giovanidev.loja_ionic_be.domain.dto.CategoriaDTO;
 import com.giovanidev.loja_ionic_be.domain.dto.ClienteDTO;
+import com.giovanidev.loja_ionic_be.domain.dto.ClienteNewDTO;
+import com.giovanidev.loja_ionic_be.domain.enums.TipoCliente;
+import com.giovanidev.loja_ionic_be.repository.CidadeRepository;
 import com.giovanidev.loja_ionic_be.repository.ClienteRepository;
+import com.giovanidev.loja_ionic_be.repository.EnderecoRepository;
 import com.giovanidev.loja_ionic_be.service.exception.ObjectNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
+
+
+import jakarta.validation.Valid;
 
 @Service
 public class ClienteService {
 
 	@Autowired
 	private ClienteRepository clienteRepository;
+
+	@Autowired
+	private EnderecoRepository enderecoRepository;
+	
 
 	public Cliente find(Integer id) {
 		Optional<Cliente> clienteEncontrado = clienteRepository.findById(id);
@@ -31,20 +46,24 @@ public class ClienteService {
 
 	public Cliente update(Cliente cliente) {
 		Cliente clienteEncontrado = find(cliente.getId());
-		updateData(clienteEncontrado,cliente);
-		
+		updateData(clienteEncontrado, cliente);
+
 		return clienteRepository.save(clienteEncontrado);
 	}
-	
-	public Cliente insert(ClienteDTO clienteDto) {
-		Cliente cliente = fromDto(clienteDto);
-		return clienteRepository.save(cliente);
+
+	@Transactional
+	public Cliente insert(Cliente obj) {
+		obj.setId(null);
+		
+		obj = clienteRepository.save(obj);
+		enderecoRepository.saveAll(obj.getEnderecos());
+		return obj;
 	}
 
 	private void updateData(Cliente clienteEncontrado, Cliente cliente) {
 		clienteEncontrado.setNome(cliente.getNome());
 		clienteEncontrado.setEmail(cliente.getEmail());
-		
+
 	}
 
 	public void delete(Integer id) {
@@ -65,11 +84,24 @@ public class ClienteService {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
 		return clienteRepository.findAll(pageRequest);
 	}
-	
+
 	public Cliente fromDto(ClienteDTO clienteDTO) {
-		return new Cliente(clienteDTO.getId(), clienteDTO.getNome(),clienteDTO.getEmail(),null,null);
+		return new Cliente(clienteDTO.getId(), clienteDTO.getNome(), clienteDTO.getEmail(), null, null);
 	}
-	
-	
+
+	public Cliente fromDTO(ClienteNewDTO objDto) {
+		Cliente cli = new Cliente(null, objDto.getNome(), objDto.getEmail(), objDto.getCpfOuCnpj(), TipoCliente.toEnum(objDto.getTipo()));
+		Cidade cid = new Cidade(objDto.getCidadeId(), null, null);
+		Endereco end = new Endereco(null, objDto.getLogradouro(), objDto.getNumero(), objDto.getComplemento(), objDto.getBairro(), objDto.getCep(), cli, cid);
+		cli.getEnderecos().add(end);
+		cli.getTelefones().add(objDto.getTelefone1());
+		if (objDto.getTelefone2()!=null) {
+			cli.getTelefones().add(objDto.getTelefone2());
+		}
+		if (objDto.getTelefone3()!=null) {
+			cli.getTelefones().add(objDto.getTelefone3());
+		}
+		return cli;
+	}
 
 }

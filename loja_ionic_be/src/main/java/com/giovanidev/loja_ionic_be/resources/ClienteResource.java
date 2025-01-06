@@ -22,6 +22,7 @@ import com.giovanidev.loja_ionic_be.domain.Categoria;
 import com.giovanidev.loja_ionic_be.domain.Cliente;
 import com.giovanidev.loja_ionic_be.domain.dto.CategoriaDTO;
 import com.giovanidev.loja_ionic_be.domain.dto.ClienteDTO;
+import com.giovanidev.loja_ionic_be.domain.dto.ClienteNewDTO;
 import com.giovanidev.loja_ionic_be.service.ClienteService;
 
 import jakarta.validation.Valid;
@@ -60,12 +61,20 @@ public class ClienteResource {
 	}
 
 	@PostMapping
-	public ResponseEntity<Void> insert(@Valid @RequestBody ClienteDTO clienteDto) {
-		Cliente cliente = clienteService.insert(clienteDto);
+	public ResponseEntity<Void> insert(@Valid @RequestBody ClienteNewDTO clienteDto) {
+		Cliente cliente = clienteService.fromDTO(clienteDto);
+		cliente = clienteService.insert(cliente);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(cliente.getId())
 				.toUri();
 		return ResponseEntity.created(uri).build();
 	}
+	
+	
+	
+	
+	
+	
+	
 
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<Void> update(@javax.validation.Valid @RequestBody Cliente cliente, @PathVariable Integer id) {

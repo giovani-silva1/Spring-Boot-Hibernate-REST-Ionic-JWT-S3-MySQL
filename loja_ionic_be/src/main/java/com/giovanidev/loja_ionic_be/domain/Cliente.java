@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.giovanidev.loja_ionic_be.domain.enums.TipoCliente;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
@@ -35,8 +36,8 @@ public class Cliente implements Serializable {
 	private Integer tipo;
 	
 	
-	@OneToMany(mappedBy="cliente")
-	private List<Endereco> enderecos;
+	@OneToMany(mappedBy="cliente",cascade=CascadeType.PERSIST)
+	private List<Endereco> enderecos = new ArrayList();
 	
 	@JsonIgnore
 	@ElementCollection
