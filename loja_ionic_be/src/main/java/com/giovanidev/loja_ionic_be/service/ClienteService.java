@@ -35,6 +35,11 @@ public class ClienteService {
 		
 		return clienteRepository.save(clienteEncontrado);
 	}
+	
+	public Cliente insert(ClienteDTO clienteDto) {
+		Cliente cliente = fromDto(clienteDto);
+		return clienteRepository.save(cliente);
+	}
 
 	private void updateData(Cliente clienteEncontrado, Cliente cliente) {
 		clienteEncontrado.setNome(cliente.getNome());
@@ -65,9 +70,6 @@ public class ClienteService {
 		return new Cliente(clienteDTO.getId(), clienteDTO.getNome(),clienteDTO.getEmail(),null,null);
 	}
 	
-	public Cliente insert(ClienteDTO clienteDto) {
-		Cliente cliente = fromDto(clienteDto);
-		return clienteRepository.save(cliente);
-	}
+	
 
 }

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.giovanidev.loja_ionic_be.domain.Categoria;
+import com.giovanidev.loja_ionic_be.domain.Cliente;
 import com.giovanidev.loja_ionic_be.domain.dto.CategoriaDTO;
 import com.giovanidev.loja_ionic_be.repository.CategoriaRepository;
 import com.giovanidev.loja_ionic_be.service.exception.ObjectNotFoundException;
@@ -33,11 +34,15 @@ public class CategoriaService {
 	}
 
 	public Categoria update(Categoria categoria) {
-		Optional<Categoria> categoriaEncontrada = categoriaRepository.findById(categoria.getId());
-		categoriaEncontrada.orElseThrow(() -> new ObjectNotFoundException(
-				"Objeto não encontrado! Id: " + categoria.getId() + ", Tipo: " + Categoria.class.getName()));
+		Categoria categoriaEncontrada = find(categoria.getId());
+		updateData(categoriaEncontrada, categoria);
 
-		return categoriaRepository.save(categoria);
+		return categoriaRepository.save(categoriaEncontrada);
+	}
+
+	private void updateData(Categoria categoriaEncontrada, Categoria categoria) {
+		categoriaEncontrada.setId(categoria.getId());
+		categoriaEncontrada.setNome(categoria.getNome());
 	}
 
 	public void delete(Integer id) {
@@ -53,13 +58,12 @@ public class CategoriaService {
 	public List<Categoria> findAll() {
 		return categoriaRepository.findAll();
 	}
-	
+
 	public Page<Categoria> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
 		return categoriaRepository.findAll(pageRequest);
 	}
-	
-	
+
 	public Categoria fromDto(CategoriaDTO categoriaDto) {
 		return new Categoria(categoriaDto.getId(), categoriaDto.getNome());
 	}
