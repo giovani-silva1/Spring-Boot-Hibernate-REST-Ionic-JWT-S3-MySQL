@@ -136,6 +136,12 @@ public class Pedido implements Serializable {
 	public int hashCode() {
 		return Objects.hash(id);
 	}
+	
+	public double getValorTotal() {
+		double soma = 0.0;
+		return soma += itens.stream().mapToDouble(x -> x.getSubTotal()).sum();
+		
+	}
 
 
 	@Override
